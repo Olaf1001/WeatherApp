@@ -1,0 +1,54 @@
+$red: #E74C3C;
+$green: rgb(43, 182, 43);
+
+body {
+    padding: 0;
+    margin: 0;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-nav {
+    border-bottom: 1px solid gray;
+}
+
+.page-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.page-logo--modifier {
+    color: $red;
+}
+
+.weather-search-input {
+    box-sizing: border-box;
+    padding: 7px 13px;
+    border: 1px solid gray;
+    border-radius: 3px;
+    font-size: 1rem;
+}
+
+.weather-search-btn {
+    padding: 8px 14px;
+    margin: 0 15px;
+    border: 0;
+    border-radius: 3px;
+    height: 34px;
+    background-color: $green;
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: white;
+    cursor: pointer;
+}
