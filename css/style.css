@@ -4,7 +4,13 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-p, h1, h2, h3, h4, h5, h6 {
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   padding: 0;
   margin: 0;
 }
@@ -25,14 +31,16 @@ p, h1, h2, h3, h4, h5, h6 {
   padding: 20px 0;
 }
 
-.page-logo {
-  font-size: 1.5rem;
-  font-weight: bold;
+.page-logo h1 {
+  font-size: 2rem;
+  font-weight: 400;
   letter-spacing: 1px;
+  margin: 0 15px;
 }
 
 .page-logo--modifier {
   color: #E74C3C;
+  font-weight: bold;
 }
 
 .weather-search-input {
@@ -56,12 +64,11 @@ p, h1, h2, h3, h4, h5, h6 {
   cursor: pointer;
 }
 
-.weather-cards-grid {
-  display: grid;
-  grid-template-columns: auto auto auto auto auto;
-  -moz-column-gap: 20px;
-       column-gap: 20px;
-  row-gap: 40px;
+.weather-cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
   margin-top: 40px;
 }
 
@@ -69,12 +76,12 @@ p, h1, h2, h3, h4, h5, h6 {
   width: 150px;
   height: 150px;
   padding: 20px;
-  border-radius: 3px;
-  box-shadow: 0px 0px 19px -8px rgb(66, 68, 90);
+  border-radius: 10px;
+  box-shadow: 0px 0px 3px 0px rgb(66, 68, 90);
 }
 
 .weather-card-city {
-  margin: 0;
+  margin: 0 0 10px 0;
   font-size: 1.5rem;
   font-weight: 600;
   letter-spacing: 1px;
@@ -86,6 +93,7 @@ p, h1, h2, h3, h4, h5, h6 {
   justify-content: center;
   margin-bottom: 10px;
 }
+
 .weather-card-temp p {
   font-size: 3rem;
 }
@@ -93,9 +101,12 @@ p, h1, h2, h3, h4, h5, h6 {
   margin-top: 12px;
 }
 
-.weather-card-humidity, .weather-card-pressure {
+.weather-card-humidity,
+.weather-card-pressure {
   flex-direction: column;
 }
-.weather-card-humidity p, .weather-card-pressure p {
+
+.weather-card-humidity p,
+.weather-card-pressure p {
   font-weight: 600;
 }/*# sourceMappingURL=style.css.map */
