@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="css/style.css">
     <title>WeatherApp</title>
 </head>
+
 <body>
     <main>
         <nav class="page-nav">
@@ -15,18 +17,18 @@
                     <h1>Weather<span class="page-logo--modifier">App</span></h1>
                 </div>
                 <div class="page-search-input flex">
-                    <input type="text" class="weather-search-input" placeholder="Type your town">
-                    <button class="weather-search-btn">CHECK</button>
+                    <input type="text" class="weather-search-input" id="searchInput" placeholder="Type your town">
+                    <button class="weather-search-btn" id="searchBtn">CHECK</button>
                 </div>
             </div>
         </nav>
         <section class="weather-cards-section">
             <div class="container">
-                <div class="weather-cards-grid">
-                </div>
+                <div class="weather-cards-grid" id="weatherCardsContainer"></div>
             </div>
         </section>
     </main>
     <script type="module" src="js/app.js"></script>
 </body>
+
 </html>

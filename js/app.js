@@ -1,99 +1,66 @@
 import { getWeather } from "./apiConnection.js";
-const appElements = {};
-const weatherCard = {};
+import { mapListToDOMElements } from "./DOMElements.js";
+import { createWeatherCardElement } from "./DOMElements.js";
+class WeatherApp {
+  constructor() {
+    this.viewElements = {};
+    this.weatherCard = {};
+    this.initializeApp();
+  }
 
-const getDOMElement = htmlClass => {
-    return document.querySelector(htmlClass);
-}
+  initializeApp = () => {
+    this.linkDOMElements();
+    this.setupListeners();
+  };
 
-const createDOMElement = tag => {
-    return document.createElement(tag)
-}
+  linkDOMElements = () => {
+    const IDs = Array.from(document.querySelectorAll("[id]")).map(
+      (element) => element.id
+    );
+    this.viewElements = mapListToDOMElements(IDs);
+  };
 
-const getHTMLElements = () => {
-    appElements.searchInput = getDOMElement('.weather-search-input');
-    appElements.searchBtn = getDOMElement('.weather-search-btn');
-    appElements.weatherCardsContainer = getDOMElement('.weather-cards-grid');
-}
+  setupListeners = () => {
+    this.viewElements.searchInput.addEventListener("keydown", this.onSearchSubmit);
+    this.viewElements.searchBtn.addEventListener("click", this.onSearchSubmit);
+  };
+  
+  insertWeatherCardElement = (where, what) => {
+    this.weatherCard[where].appendChild(what);
+  }
 
-const setupListeners = () => {
-    appElements.searchInput.addEventListener('keydown', onSearchSubmit);
-    appElements.searchBtn.addEventListener('click', onSearchSubmit);
-}
+  setupWeatherCard = () => {
+    const cardBox = this.weatherCard.weatherCardBox = createWeatherCardElement('weatherCardBox', 'div', 'weather-card', '');
+    this.viewElements.weatherCardsContainer.appendChild(cardBox);
 
-const onSearchSubmit = e => {
-    if(e.key === 'Enter') {
-        let city = appElements.searchInput.value
-        getWeather(city).then(data => {
-            createWeatherCard();
-            displayWeather(data);
-            console.log(data)
-        });
+    const cardCity = this.weatherCard.weatherCity= createWeatherCardElement('weatherCity', 'h4', 'weather-card-city', '');
+    this.insertWeatherCardElement('weatherCardBox', cardCity);
+    
+    const cardTempBox = this.weatherCard.weatherTempBox = createWeatherCardElement('weatherTempBox', 'div', 'weather-card-temp', '');
+    this.insertWeatherCardElement('weatherCardBox', cardTempBox);
+
+    const cardTemp = this.weatherCard.weatherTemp = createWeatherCardElement('weatherTemp', 'p', '', '');
+    this.insertWeatherCardElement('weatherTempBox', cardTemp);
+
+    const cardWeatherSi = createWeatherCardElement('weatherSi', 'span', '', '°C');
+    this.insertWeatherCardElement('weatherTempBox', cardWeatherSi);
+    
+  }
+
+  fillWeatherCardWithData = (data) => {
+    this.weatherCard.weatherCity.innerText = `${data.name}`;
+    this.weatherCard.weatherTemp.innerText = `${data.main.temp.toFixed(1)}`;
+  }
+
+  onSearchSubmit = (e) => {
+    if (e.key === "Enter" || e.type === "click") {
+      let city = this.viewElements.searchInput.value;
+      getWeather(city).then((data) => {
+        this.setupWeatherCard();
+        this.fillWeatherCardWithData(data);
+      });
     }
-
+  };
 }
 
-
-
-const createWeatherCard = () => {
-    weatherCard.weatherCardBox = createDOMElement('div');
-    weatherCard.weatherCardBox.className = 'weather-card';
-    appElements.weatherCardsContainer.appendChild(weatherCard.weatherCardBox);
-
-    weatherCard.weatherCity = createDOMElement('h4');
-    weatherCard.weatherCity.className = 'weather-card-city';
-    weatherCard.weatherCardBox.appendChild(weatherCard.weatherCity);
-
-    weatherCard.weatherTempBox = createDOMElement('div');
-    weatherCard.weatherTempBox.className = 'weather-card-temp';
-    weatherCard.weatherCardBox.appendChild(weatherCard.weatherTempBox);
-
-    weatherCard.weatherTemp = createDOMElement('p');
-    weatherCard.weatherTempBox.appendChild(weatherCard.weatherTemp);
-
-    weatherCard.weatherSi = createDOMElement('span');
-    weatherCard.weatherSi.innerText = '°C';
-    weatherCard.weatherTempBox.appendChild(weatherCard.weatherSi);
-
-    weatherCard.weatherOthersBox = createDOMElement('div');
-    weatherCard.weatherOthersBox.className = 'weather-card-others flex';
-    weatherCard.weatherCardBox.appendChild(weatherCard.weatherOthersBox);
-
-    weatherCard.weatherHumidityBox = createDOMElement('div');
-    weatherCard.weatherHumidityBox.className = 'weather-card-humidity flex';
-    weatherCard.weatherOthersBox.appendChild(weatherCard.weatherHumidityBox);
-
-    weatherCard.weatherHumadityValue = createDOMElement('span');
-    weatherCard.weatherHumidityBox.appendChild(weatherCard.weatherHumadityValue);
-
-    weatherCard.weatherHumadityText = createDOMElement('p');
-    weatherCard.weatherHumadityText.innerText = 'Humadity'
-    weatherCard.weatherHumidityBox.appendChild(weatherCard.weatherHumadityText);
-
-    weatherCard.weatherPressureBox = createDOMElement('div');
-    weatherCard.weatherPressureBox.className = 'weather-card-pressure flex';
-    weatherCard.weatherOthersBox.appendChild(weatherCard.weatherPressureBox);
-
-    weatherCard.weatherPressureValue = createDOMElement('span');
-    weatherCard.weatherPressureBox.appendChild(weatherCard.weatherPressureValue);
-
-    weatherCard.weatherPressureText = createDOMElement('p');
-    weatherCard.weatherPressureText.innerText = 'Pressure'
-    weatherCard.weatherPressureBox.appendChild(weatherCard.weatherPressureText);
-}
-
-const displayWeather = data => {
-    weatherCard.weatherCity.innerText = `${data.name}`;
-    weatherCard.weatherTemp.innerText = `${data.main.temp.toFixed(1)}`;
-    weatherCard.weatherHumadityValue.innerText = `${data.main.humidity}%`;
-    weatherCard.weatherPressureValue.innerText = `${data.main.pressure}hPa`;
-}
-
-const initializeApp = () => {
-    getHTMLElements();
-    setupListeners();
-
-}
-
-document.addEventListener('DOMContentLoaded', initializeApp)
-
+document.addEventListener("DOMContentLoaded", new WeatherApp);
