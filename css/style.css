@@ -64,6 +64,13 @@ h6 {
   cursor: pointer;
 }
 
+.search-error-text {
+  display: block;
+  margin-top: 8px;
+  color: #E74C3C;
+  font-size: 0.9rem;
+}
+
 .weather-cards-container {
   display: flex;
   flex-wrap: wrap;

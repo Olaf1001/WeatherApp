@@ -47,18 +47,33 @@ class WeatherApp {
     
   }
 
-  fillWeatherCardWithData = (data) => {
+  fillWeatherCardWithData = data => {
     this.weatherCard.weatherCity.innerText = `${data.name}`;
     this.weatherCard.weatherTemp.innerText = `${data.main.temp.toFixed(1)}`;
   }
 
-  onSearchSubmit = (e) => {
+  inputClearing = () => {
+    this.viewElements.searchInput.value = "";
+    this.viewElements.searchError.innerText = "";
+  }
+
+  onSearchSubmit = e => {
     if (e.key === "Enter" || e.type === "click") {
       let city = this.viewElements.searchInput.value;
-      getWeather(city).then((data) => {
-        this.setupWeatherCard();
-        this.fillWeatherCardWithData(data);
-      });
+      if(city !== "") {
+        getWeather(city).then(data => {
+          if(data.name) {
+            this.inputClearing();
+            this.setupWeatherCard();
+            this.fillWeatherCardWithData(data);
+          }
+        }).catch(() => {
+          this.inputClearing();
+          this.viewElements.searchError.innerText = "Something went wrong, Please try again";
+        })
+      } else {
+        this.viewElements.searchError.innerText = "Please enter the name of the city";
+      }
     }
   };
 }
