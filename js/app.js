@@ -4,7 +4,7 @@ import { createWeatherCardElement } from "./DOMElements.js";
 class WeatherApp {
   constructor() {
     this.viewElements = {};
-    this.weatherCard = {};
+    this.citiesList = [];
     this.initializeApp();
   }
 
@@ -25,31 +25,69 @@ class WeatherApp {
     this.viewElements.searchBtn.addEventListener("click", this.onSearchSubmit);
   };
   
-  insertWeatherCardElement = (where, what) => {
-    this.weatherCard[where].appendChild(what);
+  insertWeatherCardElement = (where, what, city) => {
+    city[where].appendChild(what);
   }
 
-  setupWeatherCard = () => {
-    const cardBox = this.weatherCard.weatherCardBox = createWeatherCardElement('weatherCardBox', 'div', 'weather-card', '');
+  setupIcon = (name, src, alt, title, tabIndex, city) => {
+    let _icon = city[name];
+    _icon.src = src;
+    _icon.alt = alt;
+    _icon.title = title;
+    _icon.tabIndex = tabIndex;
+  }
+
+  setupCityObject = data => {
+    data.name = { 
+      city: data.name,
+      temp: `${data.main.temp.toFixed(1)}`
+     };
+    
+  }
+  setupWeatherCard = data => {
+    const cardBox = data.name.weatherCardBox = createWeatherCardElement('weatherCardBox', 'div', 'weather-card', '');
     this.viewElements.weatherCardsContainer.appendChild(cardBox);
 
-    const cardCity = this.weatherCard.weatherCity= createWeatherCardElement('weatherCity', 'h4', 'weather-card-city', '');
-    this.insertWeatherCardElement('weatherCardBox', cardCity);
+    const cardCity = data.name.weatherCity = createWeatherCardElement('weatherCity', 'h4', 'weather-card-city', '');
+    this.insertWeatherCardElement('weatherCardBox', cardCity, data.name);
     
-    const cardTempBox = this.weatherCard.weatherTempBox = createWeatherCardElement('weatherTempBox', 'div', 'weather-card-temp', '');
-    this.insertWeatherCardElement('weatherCardBox', cardTempBox);
+    const cardTempBox = data.name.weatherTempBox = createWeatherCardElement('weatherTempBox', 'div', 'weather-card-temp', '');
+    this.insertWeatherCardElement('weatherCardBox', cardTempBox, data.name);
 
-    const cardTemp = this.weatherCard.weatherTemp = createWeatherCardElement('weatherTemp', 'p', '', '');
-    this.insertWeatherCardElement('weatherTempBox', cardTemp);
+    const cardTemp = data.name.weatherTemp = createWeatherCardElement('weatherTemp', 'p', '', '');
+    this.insertWeatherCardElement('weatherTempBox', cardTemp, data.name);
 
     const cardWeatherSi = createWeatherCardElement('weatherSi', 'span', '', '°C');
-    this.insertWeatherCardElement('weatherTempBox', cardWeatherSi);
-    
+    this.insertWeatherCardElement('weatherTempBox', cardWeatherSi, data.name);
+
+    const cardBtnBox = data.name.weatherBtnBox = createWeatherCardElement('weatherBtnBox', 'div', 'weather-card-btn-container flex', '');
+    this.insertWeatherCardElement('weatherCardBox', cardBtnBox, data.name);
+
+    const cardBtnHeart = data.name.cardBtnHeart = createWeatherCardElement('cardBtnHeart', 'img', 'weather-card-btn--heart-img', '');
+    this.setupIcon('cardBtnHeart', './assets/icons/heart-icon.svg', 'Heart icon', 'Add to favorite', 0, data.name);
+    this.insertWeatherCardElement('weatherBtnBox', cardBtnHeart, data.name);
+
+    const cardBtnDel = data.name.cardBtnDel = createWeatherCardElement('cardBtnDel', 'img', 'weather-card-btn--del-img', '');
+    this.setupIcon('cardBtnDel', './assets/icons/trash-icon.svg', 'Trash icon', 'Remove city from the list', 0, data.name);
+    this.insertWeatherCardElement('weatherBtnBox', cardBtnDel, data.name);
   }
 
-  fillWeatherCardWithData = data => {
-    this.weatherCard.weatherCity.innerText = `${data.name}`;
-    this.weatherCard.weatherTemp.innerText = `${data.main.temp.toFixed(1)}`;
+  cityRecurrence = data => {
+    for (let i = 0; i < this.citiesList.length; i++) {
+      if (this.citiesList[i].city == data.name) {
+          return true;
+      }
+    }
+    return false;
+  } 
+
+  insertWeatherDataIntoCard = data => {
+     data.name.weatherCity.innerText = data.name.city;
+     data.name.weatherTemp.innerText = data.name.temp;
+  }
+
+  insertCityObjectIntoTab = data => {
+    this.citiesList.push(data.name);
   }
 
   inputClearing = () => {
@@ -64,11 +102,16 @@ class WeatherApp {
         getWeather(city).then(data => {
           if(data.name) {
             this.inputClearing();
-            this.setupWeatherCard();
-            this.fillWeatherCardWithData(data);
+            if(this.cityRecurrence(data)) {
+              this.viewElements.searchError.innerText = "This city is already on the list!";
+            } else {
+              this.setupCityObject(data);
+              this.setupWeatherCard(data);
+              this.insertWeatherDataIntoCard(data);
+              this.insertCityObjectIntoTab(data);
+            }
           }
         }).catch(() => {
-          this.inputClearing();
           this.viewElements.searchError.innerText = "Something went wrong, Please try again";
         })
       } else {

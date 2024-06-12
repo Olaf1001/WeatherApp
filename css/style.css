@@ -108,12 +108,40 @@ h6 {
   margin-top: 12px;
 }
 
-.weather-card-humidity,
-.weather-card-pressure {
-  flex-direction: column;
+.weather-card-btn-container {
+  width: 60%;
+  margin: 20px auto 0 auto;
+}
+.weather-card-btn-container img {
+  height: 30px;
+  cursor: pointer;
+}
+.weather-card-btn-container img:hover {
+  animation: shake 0.5s infinite;
 }
 
-.weather-card-humidity p,
-.weather-card-pressure p {
-  font-weight: 600;
+.weather-card-btn--del-img {
+  transition: 0.2s filter;
+}
+
+.weather-card-btn--del-img:hover {
+  filter: invert(29%) sepia(96%) saturate(1907%) hue-rotate(345deg) brightness(104%) contrast(81%);
+}
+
+@keyframes shake {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(10deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(-10deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }/*# sourceMappingURL=style.css.map */
